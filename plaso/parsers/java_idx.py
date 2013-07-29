@@ -16,14 +16,6 @@
 # limitations under the License.
 
 """Parser for Java Cache IDX files."""
-import construct
-
-from plaso.lib import errors
-from plaso.lib import event
-from plaso.lib import eventdata
-from plaso.lib import parser
-from plaso.lib import timelib
-
 """
 TODO:
   * 6.02 files did not retain IP addresses. However, the 
@@ -35,6 +27,14 @@ TODO:
     also create a second event with the file creation date (from file, or from
     HTTP header "Date" which is stored as a strftime() string)
 """
+import construct
+
+from plaso.lib import errors
+from plaso.lib import event
+from plaso.lib import eventdata
+from plaso.lib import parser
+from plaso.lib import timelib
+
 
 class JavaIDXEventContainer(event.EventContainer):
   
@@ -51,14 +51,15 @@ class JavaIDXEventContainer(event.EventContainer):
 class JavaIDXParser(parser.PlasoParser):
 
   def Parse(self, file_object):
+
     """
-    There are three section structures here. 6.02 files had one generic section
+    There are five section structures here. 6.02 files had one generic section
     that retained all data. From 6.03 on, the file went to a multi-section
     format where later sections were optional and had variable-lengths. 6.03,
     6.04, and 6.05 files all have their main data section (#2) begin at offset
     128. The short structure is because 6.05 files deviate after the 8th byte.
     So, grab the first 8 bytes to ensure it's valid, get the file version, then
-    restart with the correct structure.
+    restart with the correct structures.
     """
     IDX_SHORT_STRUCT = construct.Struct('magic',
                       construct.UBInt8('busy'),
@@ -82,7 +83,7 @@ class JavaIDXParser(parser.PlasoParser):
                       construct.UBInt8('busy'),
                       construct.UBInt8('incomplete'),
                       construct.UBInt32('idx_version'),
-                      construct.UBInt16('null_space'),  # removed in 6.05
+                      construct.UBInt16('null_space'),
                       construct.UBInt8('shortcut'),
                       construct.UBInt32('content_length'),
                       construct.UBInt64('last_modified_date'),
@@ -112,6 +113,7 @@ class JavaIDXParser(parser.PlasoParser):
                       construct.PascalString('url'),
                       construct.Padding(3),
                       construct.PascalString('ip_address'))
+
     try:
       magic = IDX_SHORT_STRUCT.parse_stream(file_object)
       idx_version = magic.idx_version
