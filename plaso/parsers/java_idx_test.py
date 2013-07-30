@@ -24,6 +24,7 @@ from plaso.formatters import java_idx
 from plaso.parsers import java_idx
 from plaso.lib import preprocess
 
+
 class IDXTest(unittest.TestCase):
 
   def setUp(self):
