@@ -28,9 +28,7 @@ class JavaIDXFormatter(eventdata.ConditionalEventFormatter):
   FORMAT_STRING_PIECES = [
       u'IDX Version: {idx_version}',
       u'Host IP address: ({ip_address})',
-      u'Download URL: {url}',
-      u'Download date: {download_date}',
-      u'File uploaded to server: {last_modified_date}']
+      u'Download URL: {url}']
 
   def GetMessages(self, event_object):
     """Returns a list of messages extracted from an event object.
