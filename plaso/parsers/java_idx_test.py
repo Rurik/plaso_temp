@@ -15,13 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Parser for Java IDX download files."""
+"""Parser Test for Java Cache IDX files."""
 import os
 import pytz
 import unittest
 
 from plaso.formatters import java_idx
 from plaso.parsers import java_idx
+
+from plaso.lib import eventdata
 from plaso.lib import preprocess
 
 
@@ -34,53 +36,71 @@ class IDXTest(unittest.TestCase):
 
 
   def testParseFile(self):
-    print '[JAVA_IDX] Testing 6.05 IDX file'
+    """ Start testing 6.05 file. """
     test_file = os.path.join('test_data', 'java.idx')
+    
     events = None
     with open(test_file, 'rb') as file_object:
       events = list(self.test_parser.Parse(file_object))
-    
-    # Start testing
-    self.assertEquals(len(events), 1)
-    event_object = events[0]
 
-    idx_version_expected = 605
-    self.assertEquals(event_object.idx_version, idx_version_expected)
+    self.assertEqual(len(events), 2)
 
-    ip_address_expected = '10.7.119.10'
-    self.assertEquals(event_object.ip_address, ip_address_expected)
+    for event_object in events:
+      idx_version_expected = 605
+      self.assertEqual(event_object.idx_version, idx_version_expected)
 
-    url_expected = 'http://xxxxc146d3.gxhjxxwsf.xx:82/forum/dare.php?' + \
-                   'hsh=6&key=b30xxxx1c597xxxx15d593d3f0xxx1ab'
-    self.assertEquals(event_object.url, url_expected)
+      ip_address_expected = '10.7.119.10'
+      self.assertEqual(event_object.ip_address, ip_address_expected)
 
-    last_modified_date_expected = 996123600000
-    self.assertEquals(event_object.last_modified_date, 
-                      last_modified_date_expected)
+      url_expected = (
+        'http://xxxxc146d3.gxhjxxwsf.xx:82/forum/dare.php?'
+        'hsh=6&key=b30xxxx1c597xxxx15d593d3f0xxx1ab')
+      self.assertEqual(event_object.url, url_expected)
 
-    #SECOND TEST, 6.02 file
-    print '[JAVA_IDX] Testing 6.02 IDX file'
+      timestamp_descriptions = ['File Hosted Date', 
+        eventdata.EventTimestamp.FILE_DOWNLOADED]
+      self.assertIn(event_object.timestamp_desc, timestamp_descriptions)
+      
+      if event_object.timestamp_desc == "File Hosted Date":
+        last_modified_date_expected = 996123600000 * 1000
+        self.assertEqual(event_object.timestamp, 
+          last_modified_date_expected)
+      elif event_object.timestamp_desc == \
+        eventdata.EventTimestamp.FILE_DOWNLOADED:
+        download_date_expected = 1358094121 * 1000000
+        self.assertEqual(event_object.timestamp, download_date_expected)
+
+    """ Start testing 6.02 file. """
     test_file = os.path.join('test_data', 'java_602.idx')
     events = None
     with open(test_file, 'rb') as file_object:
       events = list(self.test_parser.Parse(file_object))
     
-    # Start testing
-    self.assertEquals(len(events), 1)
-    event_object = events[0]
+    self.assertEqual(len(events), 2)
 
-    idx_version_expected = 602
-    self.assertEquals(event_object.idx_version, idx_version_expected)
+    for event_object in events:
+      idx_version_expected = 602
+      self.assertEqual(event_object.idx_version, idx_version_expected)
 
-    ip_address_expected = 'Unknown'
-    self.assertEquals(event_object.ip_address, ip_address_expected)
+      ip_address_expected = 'Unknown'
+      self.assertEqual(event_object.ip_address, ip_address_expected)
 
-    url_expected = 'http://www.gxxxxx.com/a/java/xxz.jar'
-    self.assertEquals(event_object.url, url_expected)
+      url_expected = 'http://www.gxxxxx.com/a/java/xxz.jar'
+      self.assertEqual(event_object.url, url_expected)
 
-    last_modified_date_expected = 1273023259720
-    self.assertEquals(event_object.last_modified_date, 
-                      last_modified_date_expected)
+      timestamp_descriptions = ['File Hosted Date', 
+        eventdata.EventTimestamp.FILE_DOWNLOADED]
+      self.assertIn(event_object.timestamp_desc, timestamp_descriptions)
+      
+      if event_object.timestamp_desc == "File Hosted Date":
+        last_modified_date_expected = 1273023259720
+        self.assertEqual(event_object.timestamp, 
+          last_modified_date_expected)
+      elif event_object.timestamp_desc == \
+        eventdata.EventTimestamp.FILE_DOWNLOADED:
+        download_date_expected = 1273031551 * 1000000
+        self.assertEqual(event_object.timestamp, download_date_expected)
+
 
 if __name__ == '__main__':
   unittest.main()
