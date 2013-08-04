@@ -15,11 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Formatter for Java Cache IDX files."""
+""" Formatter for Java Cache IDX events. """
 from plaso.lib import eventdata
 
 
-class JavaIDXFormatter(eventdata.EventFormatter):
+class JavaIDXFormatter(eventdata.ConditionalEventFormatter):
+  """ Formatter for a Java Cache IDX download item. """
   DATA_TYPE = 'java:download:idx'
   SOURCE_LONG = 'Java Cache IDX'
   SOURCE_SHORT = 'JAVA_IDX'
@@ -28,7 +29,18 @@ class JavaIDXFormatter(eventdata.EventFormatter):
       u'IDX Version: {idx_version}',
       u'Host IP address: ({ip_address})',
       u'Download URL: {url}',
+      u'Download date: {download_date}',
       u'File uploaded to server: {last_modified_date}']
 
   def GetMessages(self, event_object):
+    """Returns a list of messages extracted from an event object.
+
+    Args:
+      event_object: The event object (EventObject) containing the event
+                    specific data.
+
+    Returns:
+      A list that contains both the longer and shorter version of the message
+      string.
+    """    
     return super(JavaIDXFormatter, self).GetMessages(event_object)
