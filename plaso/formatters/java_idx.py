@@ -29,16 +29,3 @@ class JavaIDXFormatter(eventdata.ConditionalEventFormatter):
       u'IDX Version: {idx_version}',
       u'Host IP address: ({ip_address})',
       u'Download URL: {url}']
-
-  def GetMessages(self, event_object):
-    """Returns a list of messages extracted from an event object.
-
-    Args:
-      event_object: The event object (EventObject) containing the event
-                    specific data.
-
-    Returns:
-      A list that contains both the longer and shorter version of the message
-      string.
-    """    
-    return super(JavaIDXFormatter, self).GetMessages(event_object)
