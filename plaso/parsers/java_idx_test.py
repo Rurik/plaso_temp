@@ -10,7 +10,7 @@
 #    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
+# distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
@@ -28,17 +28,17 @@ from plaso.lib import preprocess
 
 
 class IDXTest(unittest.TestCase):
-  """ The unit test for Java IDX parser. """
+  """The unit test for Java IDX parser."""
 
   def setUp(self):
-    """ Sets up the needed objects used throughout the test. """
+    """Sets up the needed objects used throughout the test."""
     pre_obj = preprocess.PlasoPreprocess()
     pre_obj.zone = pytz.UTC
     self.test_parser = java_idx.JavaIDXParser(pre_obj)
 
 
   def testParseFile(self):
-    """ Read two Java IDX files and make few tests. """
+    """Read two Java IDX files and make few tests."""
     test_file = os.path.join('test_data', 'java.idx')
 
     events = None
@@ -59,7 +59,7 @@ class IDXTest(unittest.TestCase):
         'hsh=6&key=b30xxxx1c597xxxx15d593d3f0xxx1ab')
     self.assertEqual(event_object.url, url_expected)
 
-    description_expected = "File Hosted Date"
+    description_expected = 'File Hosted Date'
     self.assertEqual(event_object.timestamp_desc, description_expected)
 
     last_modified_date_expected = 996123600000 * 1000
@@ -96,7 +96,7 @@ class IDXTest(unittest.TestCase):
     url_expected = 'http://www.gxxxxx.com/a/java/xxz.jar'
     self.assertEqual(event_object.url, url_expected)
 
-    description_expected = "File Hosted Date"
+    description_expected = 'File Hosted Date'
     self.assertEqual(event_object.timestamp_desc, description_expected)
 
     last_modified_date_expected = 1273023259720 * 1000
